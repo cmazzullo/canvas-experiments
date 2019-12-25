@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" >
+    <head>
+	<meta charset="utf-8">
+	<title>HTML Canvas</title>
+	<style>
+	 body {
+	     margin: 0;
+	     overflow: hidden;
+	 }
+	</style>
+    </head>
+    <body>
+	<canvas onclick="processClick()" class="myCanvas" width="500"  height="400">
+	    <p>oh fuck canvas doesn't work</p>
+	</canvas>
+	<script>
+	 var canvas = document.querySelector('.myCanvas');
+	 var width = canvas.width;
+	 var height = canvas.height;
+	 /* var width = canvas.width = window.innerWidth;
+	    var height = canvas.height = window.innerHeight; */
+
+	 var ctx = canvas.getContext('2d');
+	 ctx.fillStyle = 'rgb(0, 0, 0)';
+	 ctx.fillRect(0, 0, width, height);
+
+	 function randomColor() {
+	     let randPart = () => Math.floor(Math.random() * 256);
+	     return "rgb(" + randPart() + ", " + randPart() + ", " + randPart() + ")";
+	 }
+
+	 function processClick() {
+	     ctx.fillStyle = randomColor();
+	     ctx.fillRect(0, 0, width, height);
+	 }
+	</script>
+    </body>
+</html>
