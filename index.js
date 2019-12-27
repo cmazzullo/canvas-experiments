@@ -1,3 +1,10 @@
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
 function randomColor() {
   let randPart = () => Math.floor(Math.random() * 256);
   return "rgb(" + randPart() + ", " + randPart() + ", " + randPart() + ")";
@@ -17,15 +24,7 @@ function drawPoly(c, points) {
     c.lineTo(point.x, point.y);
   }
   c.closePath();
-  // c.fill();
   c.stroke();
-}
-
-class Point {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
 }
 
 function randTriangle(xMax, yMax) {
@@ -54,27 +53,54 @@ function sayHello(c) {
 
 function gradientBackground(c, w, h) {
   let grad = c.createLinearGradient(0, 0, w, 0);
-  grad.addColorStop(0, 'tan');
+  grad.addColorStop(0, 'pink');
+  grad.addColorStop(.5, 'tan');
+  grad.addColorStop(.7, 'black');
   grad.addColorStop(1, 'purple');
   c.fillStyle = grad;
   c.fillRect(0, 0, w, h);
 }
 
 window.onload = function() {
-
   var canvas = document.querySelector('.canvas');
 
   let c = canvas.getContext('2d');
   let w = canvas.width;
   let h = canvas.height;
-  gradientBackground(c, w, h);
   drawPainter(c);
   sayHello(c);
-  c.fillStyle = '#ccddff';
   c.strokeStyle = 'rgb(0, 128, 0)';
   c.lineWidth = 5;
 
-  for (let i = 0; i < 10; i++) {
-    drawPoly(c, randTriangle(w, h));
+  c.translate(w/2, 0);
+
+  // Draw nesting, clipped triangles
+  c.save();
+  for (let i = 0; i < 3; i++) {
+    drawPoly(c, randTriangle(w/2, h/2));
+    c.clip();
+    let fill = (i % 2 == 0) ? 'black' : 'white';
+    c.fillStyle = fill;
+    c.fill()
   }
+  c.restore();
+
+  c.translate(0, h/2);
+
+  // Draw many random triangles
+  c.save();
+  c.globalAlpha = .2;
+  c.lineWidth = 1;
+  for (let i = 0; i < 2000; i++) {
+    drawPoly(c, randTriangle(w/2, h/2));
+    let fill = randomColor();
+    c.fillStyle = fill;
+    c.fill()
+  }
+  c.globalAlpha = 1;
+  c.fillStyle = 'black';
+  c.fillText("dang that's a lot of triangles", 20, 70);
+  c.restore();
+  c.translate(-w/2, 0);
+  gradientBackground(c, w/2, h/2);
 }
